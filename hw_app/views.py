@@ -1,97 +1,107 @@
-from django.http import HttpResponse
-from random import randint
+from django.shortcuts import render, get_object_or_404
 from .models import *
 from random import *
+from datetime import datetime
 
 
-# ----------- Вывод на экран ----------------------
-def text(title, result=None, list_data=None):
-    result_string = f'<h1>{title}</h1>' \
-                    f'<h3>{result}</h3>'
-    if list_data is not None:
-        for el in list_data:
-            result_string += f'<p>{el}</p>'
-    return result_string
-
-
-# ------- Главная страница ------------------------
+# ------- Главная страница --------------------------------
 def general(request):
-    title = 'Стартовая страница'
-    result = 'Сервер запущен'
-    return HttpResponse(text(title, result))
+    context = {
+        "title": 'Главная',
+        "head": 'Стартовая страница',
+        "text": 'Сервер запущен и работает',
+    }
+    return render(request, "hw_app/general.html", context)
 
 
-# ------- Тестовые ползователи ----------------------
-def create_fake_users(request):
-    title = 'Тестовые пользователи'
-    result = 'Список пользователей создан'
-    for i in range(1, 6):
-        user = User(
-            name=f'Name_{i}',
-            email=f'e{i}@mail.com',
-            mobile=f'+7 (999) 555-44-0{i}',
-            us_adrs=f'Регион, Город, Улица, Дом, Кв.',
-        )
-        user.save()
-    return HttpResponse(text(title, result))
+# ------- Тестовые данные ---------------------------------
+def fake_datas(request, urs, pds, ods):
+    for i in range(5):
+        if urs:
+            user = User(
+                name=f'Пользователь {i}',
+                email=f'e{i}@mail.com',
+                mobile=f'+7 (999) 555-44-0{i}',
+                us_adrs=f'Регион, Город, Улица, Дом, Кв.',
+            )
+            user.save()
+    if pds:
+        for i in range(1, 8):
+            product = Product(
+                name=f'Товар - {i}',
+                content=f'Описание товара ...',
+                price=uniform(500, 10000),
+                count=randint(1, 20),
+            )
+            product.save()
+    if ods:
+        for user in User.objects.all():
+            order = Order(us_name=user)
+            order.save()
+            sum_price = 0
+            l_pid = sample(list(i for i in range(1, len(Product.objects.all()))), 5)
+            for pid in l_pid:
+                order_product = Product.objects.filter(pk=pid).first()
+                sum_price += order_product.price_get()
+                order.products.add(order_product)
+            order.sum_price = sum_price
+            order.save()
+    context = {
+        "title": 'Data',
+        "head": 'Fakes data',
+        "text": 'Create fakes data is complete',
+    }
+    return render(request, "hw_app/general.html", context)
 
 
-def list_fake_users(request):
-    title = 'Список пользователей'
-    result = 'Общий список загружен'
-    users = []
-    for user in User.objects.all():
-        users.append(user.full_data())
-    return HttpResponse(text(title, result, users))
+# ------- Список клентов ----------------------------------
+def list_users(request):
+    context = {"users": User.objects.all()}
+    return render(request, "hw_app/dbu.html", context)
 
 
-# ------- Тестовые товары ------------------------
-def create_fake_products(request):
-    title = 'Тестовые Товары'
-    result = 'Список тестовых товаров создан'
-    for i in range(1, 21):
-        prdt = Product(
-            name=f'Товар - {i}',
-            content=f'Описание товара ...',
-            price=uniform(500, 10000),
-            count=randint(1,20),
-        )
-        prdt.save()
-    return HttpResponse(text(title, result))
+# ------- Список товаров ----------------------------------
+def list_products(request):
+    context = {"products": Product.objects.all()}
+    return render(request, "hw_app/dbp.html", context)
 
 
-def list_fake_products(request):
-    title = 'Список товаров'
-    result = 'Общий список товаров загружен'
-    prts = []
-    for prdt in Product.objects.all():
-        prts.append(prdt.full_data())
-    return HttpResponse(text(title, result, prts))
+# ------- Список заказов ----------------------------------
+def list_orders(request):
+    context = {"orders": Order.objects.all()}
+    return render(request, "hw_app/dbo.html", context)
 
 
-# ------- Тестовые заказы ------------------------
-def create_fake_orders(request):
-    title = 'Тестовые заказы'
-    result = 'Список тестовых заказов создан'
-    for user in User.objects.all():
-        order = Order(us_name=user)
-        order.save()
-        sum_price = 0
-        for _ in range(5):
-            pid = randint(1, 20)
-            prd = Product.objects.filter(pk=pid).first()
-            order.products.add(prd)
-            sum_price += prd.price_get()
-        order.sum_price = sum_price
-        order.save()
-    return HttpResponse(text(title, result))
+# ------- Список товаров в заказе -------------------------
+def basket(request, oid):
+    context = {
+        'head': Order.objects.get(pk=oid).us_name,
+        'basket': Order.objects.get(pk=oid).products.all(),
+    }
+    return render(request, "hw_app/dbbasket.html", context)
 
 
-def list_fake_orders(request):
-    title = 'Список заказов'
-    result = 'Общий список заказов загружен'
-    orders = []
-    for order in Order.objects.all():
-        orders.append(order)
-        print(order.products)
-    return HttpResponse(text(title, result, orders))
+# ------- Список товаров клиента --------------------------
+def us_products(request, uid):
+    user = get_object_or_404(User, pk=uid)
+    orders_list = Order.objects.filter(us_name=user)
+    products_list = []
+    for el in orders_list:
+        products_list += Order.objects.get(pk=el.id).products.all()
+    context = {'user_products': products_list}
+    return render(request, 'hw_app/us_prod.html', context)
+
+
+# ------- Список товаров с отсевом по времени -------------
+def us_products_time(request, uid, dif_day):
+    user = get_object_or_404(User, pk=uid)
+    orders_list = Order.objects.filter(us_name=user)
+    products_list = []
+    for el in orders_list:
+        delta = abs(el.order_day.replace(tzinfo=None) - datetime.utcnow())
+        if delta.days < dif_day:
+            products_list += Order.objects.get(pk=el.id).products.all()
+    products_list = list(set(products_list))
+    products_list.sort(key=lambda x: x.add_day)
+    context = {'user_products': products_list}
+    return render(request, 'hw_app/us_prod.html', context)

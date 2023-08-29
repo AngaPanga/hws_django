@@ -1,0 +1,19 @@
+{% extends 'hw_app/base.html' %}
+
+{% block title %}
+    База
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+    {% for user in users %}
+        <p>
+            Имя: {{ user.name }}&ensp; &ensp; &ensp; Телефон: {{ user.mobile }}<br>
+            Дата регистрации: {{ user.reg_day|date:"d.m.Y" }} &ensp; {{ user.reg_day|time:"H:i" }}<br>
+            E-mail: {{ user.email }}<br>
+            Адрес: {{ user.us_adrs }}<br>
+            <a href="{% url 'us_pr' user.id %}"> Список товаров </a>
+        </p>
+    {% endfor %}
+    </div>
+{% endblock %}

@@ -43,12 +43,12 @@ class Product(models.Model):
 # -------------- ORDER -----------------------------------------------------------------------
 class Order(models.Model):
     us_name = models.ForeignKey(User, on_delete=models.CASCADE)
-    products = models.ManyToManyField(Product)
+    products = models.ManyToManyField(Product, related_name="order_products")
     sum_price = models.DecimalField(default=0.0, max_digits=10, decimal_places=2)
     order_day = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f'{self.us_name}<br>' \
-               f'Sum price: {self.sum_price}<br>' \
+        return f'{self.us_name}' \
+               f'Sum price: {self.sum_price}' \
                f'Date: {self.order_day}' \
-               # f'{self.products} <br>'
+               # f'{self.products}'

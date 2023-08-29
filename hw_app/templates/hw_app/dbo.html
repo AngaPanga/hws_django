@@ -1,0 +1,18 @@
+{% extends 'hw_app/base.html' %}
+
+{% block title %}
+    База
+{% endblock %}
+
+{% block content %}
+    <div class="row">
+    {% for order in orders %}
+        <p>
+            Дата оформления: {{ order.order_day|date:"d.m.Y" }} &ensp; {{ order.order_day|time:"H:i" }}<br>
+            Клиент: {{ order.us_name }}<br>
+            Стоимость заказа: <b>{{ order.sum_price }}</b><br>
+            Корзина: <a href="{% url 'basket' order.id %}"> Список товаров </a>
+        </p>
+    {% endfor %}
+    </div>
+{% endblock %}

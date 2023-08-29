@@ -4,10 +4,11 @@ from . import views
 
 urlpatterns = [
     path('', views.general, name='general'),
-    path('cfu/', views.create_fake_users, name='create_users'),
-    path('cfp/', views.create_fake_products, name='create_products'),
-    path('cfo/', views.create_fake_orders, name='create_orders'),
-    path('lfu/', views.list_fake_users, name='list_users'),
-    path('lfp/', views.list_fake_products, name='list_products'),
-    path('lfo/', views.list_fake_orders, name='list_orders'),
+    path('fakes/<int:urs>/<int:pds>/<int:ods>/', views.fake_datas, name='fakes'),
+    path('lu/', views.list_users, name='list_users'),
+    path('lp/', views.list_products, name='list_products'),
+    path('lo/', views.list_orders, name='list_orders'),
+    path('basket/<int:oid>/', views.basket, name='basket'),
+    path('us_pr/<int:uid>/', views.us_products, name='us_pr'),
+    path('us_pr_tm/<int:uid>/<int:dif_day>/', views.us_products_time, name='us_pr_tm'),
 ]
