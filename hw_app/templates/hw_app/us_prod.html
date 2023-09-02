@@ -1,12 +1,13 @@
 {% extends 'hw_app/base.html' %}
 
 {% block title %}
-    Карзина клиента
+    {{ title }}
 {% endblock %}
 
 {% block content %}
-    <div class="row">
-        {{ head }}
+    <h2>{{ head }}</h2>
+    <p>{{ text }}</p>
+    <div>
         <ol>
             {% for el in user_products %}
                 <li>

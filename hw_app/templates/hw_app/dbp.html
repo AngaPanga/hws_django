@@ -1,19 +1,24 @@
 {% extends 'hw_app/base.html' %}
 
 {% block title %}
-    База
+    {{ title }}
 {% endblock %}
 
 {% block content %}
-    <div class="row">
+    <h2>{{ head }}</h2>
+    <div>
     {% for product in products %}
-        <p>
-            Дата добавления: {{ product.add_day|date:"d.m.Y" }} &ensp; {{ product.add_day|time:"H:i" }}<br>
-            Товар: {{ product.name }}&ensp; &ensp; &ensp;
-            <b>{{ product.price }}</b><br>
-            В наличии осталось: {{ product.count }}<br>
-            Описание: <br> {{ product.content }}<br>
-        </p>
+        <div class="row">
+            &ensp; &ensp; &ensp; <img src="{{ product.image.url }}" width="200px" alt="">
+            <div>
+                &ensp; Дата добавления: {{ product.add_day|date:"d.m.Y" }} &ensp; {{ product.add_day|time:"H:i" }}<br>
+                &ensp; Товар: {{ product.name }}&ensp; &ensp; &ensp;<b>{{ product.price }}</b><br>
+                &ensp; В наличии осталось: {{ product.count }}<br>
+
+            </div>
+        </div>
+        &ensp; Описание: <br>&ensp; {{ product.content }}<br>
+    <br>
     {% endfor %}
     </div>
 {% endblock %}

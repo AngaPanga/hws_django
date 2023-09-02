@@ -1,14 +1,16 @@
 {% extends 'hw_app/base.html' %}
 
 {% block title %}
-    База
+    {{ title }}
 {% endblock %}
 
 {% block content %}
-    <div class="row">
+    <h2>{{ head }}</h2>
+    <p>{{ text }}</p>
+    <div>
     {% for user in users %}
         <p>
-            Имя: {{ user.name }}&ensp; &ensp; &ensp; Телефон: {{ user.mobile }}<br>
+            Имя: {{ user.name }} &ensp; &ensp; &ensp; Телефон: {{ user.mobile }}<br>
             Дата регистрации: {{ user.reg_day|date:"d.m.Y" }} &ensp; {{ user.reg_day|time:"H:i" }}<br>
             E-mail: {{ user.email }}<br>
             Адрес: {{ user.us_adrs }}<br>

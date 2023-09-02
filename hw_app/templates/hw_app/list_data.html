@@ -1,0 +1,20 @@
+{% extends 'hw_app/base.html' %}
+
+{% block title %}
+    {{ title }}
+{% endblock %}
+
+{% block content %}
+    <h2>{{ head }}</h2>
+    <div>
+        <uL >
+            <li><a href="{% url 'add_u' %}"> Создать клиента</a></li>
+            <li><a href="{% url 'add_p' %}"> Создать товар</a></li>
+            <li><a href="{% url 'cu' %}"> Изменить клиента</a></li>
+            <li><a href="{% url 'cp' %}"> Изменить товар</a></li>
+            <li><a href="{% url 'fakes' 1 0 0 %}"> Создать 5 случайных пользователей</a></li>
+            <li><a href="{% url 'fakes' 0 1 0 %}"> Создать 7 случайных товаров</a></li>
+            <li><a href="{% url 'fakes' 0 0 1 %}"> Создать случайные заказы</a></li>
+        </ul>
+    </div>
+{% endblock %}
