@@ -21,10 +21,9 @@ class ProductForm(forms.Form):
     content = forms.CharField(max_length=1000, label='Описание', widget=forms.Textarea())
 
 
+# class ChoiceUser(forms.Form):
+#     change = forms.ChoiceField(choices=[(el.id, el) for el in User.objects.all()])
 
-class ChoiceUser(forms.Form):
-    change = forms.ChoiceField(choices=[(el.id, el) for el in User.objects.all()])
 
-
-class ChoiceProduct(forms.Form):
-    change = forms.ChoiceField(choices=[(el.id, el) for el in Product.objects.all()])
+# class ChoiceProduct(forms.Form):
+#     change = forms.ChoiceField(choices=[(el.id, el) for el in Product.objects.all()])
